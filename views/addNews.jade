@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1 message
+  p Hello
+  form(method="post", action="/news")
+    input(type="text", name="text")
+    input(type="checkbox", name="active")
+    button(type="submit", value="add")

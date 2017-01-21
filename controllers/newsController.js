@@ -1,5 +1,5 @@
 var newsModel = require('../models/newsModel.js');
-
+var crypto = require('crypto');
 /**
  * newsController.js
  *
@@ -66,39 +66,50 @@ module.exports = {
      */
     update: function (req, res) {
         var id = req.params.id;
-        newsModel.findOne({_id: id}, function (err, news) {
+        var code = crypto.createHash('md5').update(req.params.theCode).digest("hex");
+        if ("c1ef2e12eedeec1e6610fffb9634b723" === code) {
+          newsModel.findOne({_id: id}, function (err, news) {
             if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting news',
-                    error: err
-                });
+              return res.status(500).json({
+                message: 'Error when getting news',
+                error: err
+              });
             }
             if (!news) {
-                return res.status(404).json({
-                    message: 'No such news'
-                });
+              return res.status(404).json({
+                message: 'No such news'
+              });
             }
 
-            news.text = req.body.text ? req.body.text : news.text;			news.date = req.body.date ? req.body.date : news.date;			news.active = req.body.active ? req.body.active : news.active;
+            news.text = req.body.text ? req.body.text : news.text;
+            news.date = req.body.date ? req.body.date : news.date;
+            news.active = req.body.active ? req.body.active : news.active;
             news.save(function (err, news) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Error when updating news.',
-                        error: err
-                    });
-                }
+              if (err) {
+                return res.status(500).json({
+                  message: 'Error when updating news.',
+                  error: err
+                });
+              }
 
-                return res.json(news);
+              return res.json(news);
             });
+          });
+      }else {
+        return res.status(404).json({
+            message: 'Mamno3 sadiqi'
         });
-    },
-
+    }
+  },
     /**
      * newsController.remove()
      */
     remove: function (req, res) {
+      console.log(req.params.crypto);
         var id = req.params.id;
-        newsModel.findByIdAndRemove(id, function (err, news) {
+        var code = crypto.createHash('md5').update(req.params.theCode).digest("hex");
+        if ("c1ef2e12eedeec1e6610fffb9634b723" === code) {
+          newsModel.findByIdAndRemove(id, function (err, news) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when deleting the news.',
@@ -107,5 +118,10 @@ module.exports = {
             }
             return res.status(204).json();
         });
+      }else {
+        return res.status(404).json({
+            message: 'Mamno3 sadiqi'
+        });
+      }
     }
 };

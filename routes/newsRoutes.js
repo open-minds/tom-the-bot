@@ -20,11 +20,11 @@ router.post('/', newsController.create);
 /*
  * PUT
  */
-router.put('/:id', newsController.update);
+router.put('/:theCode/:id', newsController.update);
 
 /*
  * DELETE
  */
-router.delete('/:id', newsController.remove);
+router.delete('/:theCode/:id', newsController.remove);
 
 module.exports = router;

@@ -55,6 +55,25 @@ controller.hears('tu sais, je suis', ['direct_message','direct_mention','mention
       }
   );
 });
+
+controller.hears('you know, I\'m', ['direct_message','direct_mention','mention'], function(bot, message) {
+  request.post({
+      url: 'http://text-processing.com/api/sentiment/',
+      form: {
+        text: message.text
+      }
+    },
+    function(error, response, body){
+      var answerLabel = JSON.parse(body)["label"];
+      if (answerLabel==='neg') {
+        return bot.reply(message, "Oh :confused:, Ghi lkhir ?");
+      } else {
+        return bot.reply(message, "Ah :smiley: Glad to hear that !");
+      }
+      }
+  );
+});
+
 controller.on('direct_message', function(bot, message) {
     bot.reply(message, "3lach rak tgoli \""+ message.text +"\" ?");
 });

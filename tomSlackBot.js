@@ -1,7 +1,7 @@
-var Botkit = require('botkit');
-var request = require('request');
+const Botkit = require('botkit');
+const request = require('request');
 
-var controller = Botkit.slackbot({
+let controller = Botkit.slackbot({
     debug: false
     //include "log: false" to disable logging
     //or a "logLevel" integer from 0 to 7 to adjust logging verbosity
@@ -10,23 +10,21 @@ var controller = Botkit.slackbot({
 // connect the bot to a stream of messages
 controller.spawn({
         token: process.env.BOTTOKEN,
-}).startRTM()
+}).startRTM();
 
-// give the bot something to listen for.
-controller.hears('salam',['direct_message','direct_mention','mention'],function(bot,message) {
+controller.hears('salam',['direct_message','direct_mention','mention'],(bot,message) => {
     bot.reply(message,`wa Alikom Salam <@${message.user}> :smiley:`);
 });
 
-controller.hears('kech jdid', ['direct_message','direct_mention','mention'], function(bot, message) {
-  var jdid = [];
+controller.hears('kech jdid', ['direct_message','direct_mention','mention'], (bot, message) => {
+  let jdid = [];
   request.get('https://boiling-inlet-40180.herokuapp.com/news', (err,res,body) => {
     if (!err && res.statusCode == 200) {
       jdid = JSON.parse(body);
     }
 
-    console.log("eheeem",jdid.length,"");
     let thenews = "";
-    for (var variable in jdid) {
+    for (let variable in jdid) {
       thenews += "* " + jdid[variable].text + "\n";
 
     }
@@ -37,7 +35,7 @@ controller.hears('kech jdid', ['direct_message','direct_mention','mention'], fun
     }
   });
 });
-controller.hears('tu sais, je suis', ['direct_message','direct_mention','mention'], function(bot, message) {
+controller.hears('tu sais, je suis', ['direct_message','direct_mention','mention'], (bot, message) => {
   request.post({
       url: 'http://text-processing.com/api/sentiment/',
       form: {
@@ -46,7 +44,7 @@ controller.hears('tu sais, je suis', ['direct_message','direct_mention','mention
       }
     },
     function(error, response, body){
-      var answerLabel = JSON.parse(body)["label"];
+      let answerLabel = JSON.parse(body)["label"];
       if (answerLabel==='neg') {
         return bot.reply(message, "Oh :confused:, Ghi lkhir ?");
       } else {
@@ -56,7 +54,7 @@ controller.hears('tu sais, je suis', ['direct_message','direct_mention','mention
   );
 });
 
-controller.hears('you know, I\'m', ['direct_message','direct_mention','mention'], function(bot, message) {
+controller.hears('you know, I\'m', ['direct_message','direct_mention','mention'], (bot, message) => {
   request.post({
       url: 'http://text-processing.com/api/sentiment/',
       form: {
@@ -64,7 +62,7 @@ controller.hears('you know, I\'m', ['direct_message','direct_mention','mention']
       }
     },
     function(error, response, body){
-      var answerLabel = JSON.parse(body)["label"];
+      let answerLabel = JSON.parse(body)["label"];
       if (answerLabel==='neg') {
         return bot.reply(message, "Oh :confused:, Ghi lkhir ?");
       } else {
@@ -74,7 +72,7 @@ controller.hears('you know, I\'m', ['direct_message','direct_mention','mention']
   );
 });
 
-controller.on('direct_message', function(bot, message) {
+controller.on('direct_message', (bot, message) => {
     bot.reply(message, "3lach rak tgoli \""+ message.text +"\" ?");
 });
 

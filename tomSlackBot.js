@@ -72,6 +72,15 @@ controller.hears('you know, I\'m', ['direct_message','direct_mention','mention']
   );
 });
 
+controller.hears('golah bsa7tek', ['direct_mention','mention'], (bot, message) => {
+  bot.reply(message, "bsa7tek");
+});
+
+controller.hears('say hi to (.)*', ['direct_message','direct_mention','mention'], (bot, message) => {
+  let theName = message.text.split('@')[1];
+  bot.reply(message, "Hello <@" + theName + ", marhba biik :smiley_cat:");
+});
+
 controller.on('direct_message', (bot, message) => {
     bot.reply(message, "3lach rak tgoli \""+ message.text +"\" ?");
 });
